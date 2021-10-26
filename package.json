@@ -17,5 +17,12 @@
   "bugs": {
     "url": "https://github.com/chris-noriega14/Employee_Management_System/issues"
   },
-  "homepage": "https://github.com/chris-noriega14/Employee_Management_System#readme"
+  "homepage": "https://github.com/chris-noriega14/Employee_Management_System#readme",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "inquirer": "^8.2.0",
+    "mysql2": "^2.3.2"
+  }
 }

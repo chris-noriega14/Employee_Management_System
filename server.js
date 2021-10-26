@@ -24,7 +24,59 @@ const db = mysql.createConnection(
     database: 'ems_db'
 },
     console.log("Connected to the ems_db database.")
+    
 );
+emsInitialPrompt();
+
+function emsInitialPrompt () {
+inquirer
+        .prompt([
+            {
+                type:"list",
+                name:"ems_suite",
+                message: "What would you like to do?",
+                choices: ["View All Employees", "Add Employee","Update Employee Role", "View All Roles", "Add Roles", "View All Departments", "Add Department","Quit"]
+            }
+        ])
+
+        .then(function(response) {
+        let contactInfo = ""
+        if(response.ems_suite === "View All Employees") {
+            employeeTable();
+        }
+        else if (response.ems_suite === "View All Roles") {
+            roleTable();
+        }
+        else if (response.ems_suite === "View All Departments") {
+            departmentTable();
+        }
+        else if (response.ems_suite === "Quit") {
+            process.exit(0);
+        } 
+        })}
+
+function departmentTable () {
+db.query('SELECT * FROM department', function (err, results) {
+    console.table(results);
+    emsInitialPrompt ();
+    });
+}
+
+function roleTable () {
+    db.query('SELECT role.id, title, department.name as department, salary FROM role JOIN department ON role.department_id = department.id', function (err, results) {
+        console.table(results);
+        emsInitialPrompt ();
+        });
+    }
+
+function employeeTable () {
+    db.query('SELECT employee.id,first_name,last_name,role.title as title, department.name as department, role.salary as salary,manager_id FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id', function (err, results) {
+        console.table(results);
+        emsInitialPrompt ();
+        });
+    }
+            
+
 // db.promise().query("SELECT 1")
 //   .then( ([rows,fields]) => {
 //     console.log(rows);

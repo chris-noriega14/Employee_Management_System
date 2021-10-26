@@ -1,3 +1,4 @@
+function emsInitialPrompt
 inquirer
         .prompt([
             {
