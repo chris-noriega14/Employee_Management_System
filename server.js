@@ -21,12 +21,13 @@ const db = mysql.createConnection(
     host:'localhost', 
     user: dbUsername, 
     password: dbPassword,
-    database: 'test'
-}
+    database: 'ems_db'
+},
+    console.log("Connected to the ems_db database.")
 );
-db.promise().query("SELECT 1")
-  .then( ([rows,fields]) => {
-    console.log(rows);
-  })
-  .catch(console.log)
-  .then( () => con.end());
+// db.promise().query("SELECT 1")
+//   .then( ([rows,fields]) => {
+//     console.log(rows);
+//   })
+//   .catch(console.log)
+//   .then( () => con.end());

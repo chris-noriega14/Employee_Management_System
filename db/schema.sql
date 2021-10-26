@@ -1,30 +1,31 @@
-DROP DATABASE IF EXISTS EMS_db
-CREATE DATABASE EMS_db
+DROP DATABASE IF EXISTS ems_db;
+CREATE DATABASE ems_db;
 
-USE DATABASE EMS_db
+USE ems_db;
 
-DROP TABLE IF EXISTS department
+DROP TABLE IF EXISTS department;
 CREATE TABLE department (
-    id INT NOT NULL PRIMARY KEY auto_increment,
-    name VARCHAR(30) NOT NULL
-)
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(30) NOT NULL
+);
 
-DROP TABLE IF EXISTS role
+DROP TABLE IF EXISTS role;
 CREATE TABLE role (
-    id INT NOT NULL PRIMARY KEY auto_increment,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(30) NOT NULL,
     salary DECIMAL NOT NULL,
-    department_id INT NOT NULL FOREIGN KEY,
-    REFERENCE department(id)
-)
+    department_id INT NOT NULL,
+    FOREIGN KEY (department_id)
+    REFERENCES department(id)
+);
 
-DROP TABLE IF EXISTS employee
+DROP TABLE IF EXISTS employee;
 CREATE TABLE employee (
-    id INT NOT NULL PRIMARY KEY auto_increment,
-    first name VARCHAR(30) NOT NULL,
-    last name VARCHAR(30) NOT NULL,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(30) NOT NULL,
+    last_name VARCHAR(30) NOT NULL,
     role_id INT NOT NULL,
-    manager_id INT NOT NULL,
-    FOREIGN KEY (manager_id) REFERENCES employee(id),
-    FOREIGN KEY (role_id) REFERENCES role(id)
-)
+    manager_id INT,
+    FOREIGN KEY (role_id) REFERENCES role(id),
+    FOREIGN KEY (manager_id) REFERENCES employee(id)
+);
