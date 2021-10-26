@@ -44,22 +44,42 @@ inquirer
         if(response.ems_suite === "View All Employees") {
             employeeTable();
         }
+        else if (response.ems_suite === "Add Employee") {
+            addEmployee();
+        }
+        else if (response.ems_suite === "Update Employee Role") {
+            updateRole();
+        }
         else if (response.ems_suite === "View All Roles") {
             roleTable();
         }
+        else if (response.ems_suite === "Add Roles") {
+            addRoles();
+        }
         else if (response.ems_suite === "View All Departments") {
             departmentTable();
+        }
+        else if (response.ems_suite === "Add Department") {
+            addDepartment();
         }
         else if (response.ems_suite === "Quit") {
             process.exit(0);
         } 
         })}
 
-function departmentTable () {
-db.query('SELECT * FROM department', function (err, results) {
-    console.table(results);
+function employeeTable () {
+    db.query('SELECT employee.id,first_name,last_name,role.title as title, department.name as department, role.salary as salary,manager_id FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id', function (err, results) {
+        console.table(results);
+        emsInitialPrompt ();
+        });
+    }
+
+function addEmployee () {  
     emsInitialPrompt ();
-    });
+}
+
+function updateRole () { 
+    emsInitialPrompt ();
 }
 
 function roleTable () {
@@ -69,12 +89,32 @@ function roleTable () {
         });
     }
 
-function employeeTable () {
-    db.query('SELECT employee.id,first_name,last_name,role.title as title, department.name as department, role.salary as salary,manager_id FROM employee JOIN role ON employee.role_id = role.id JOIN department ON role.department_id = department.id', function (err, results) {
+function addRoles () {   
+    emsInitialPrompt ();
+}
+
+function departmentTable () {
+    db.query('SELECT * FROM department', function (err, results) {
         console.table(results);
         emsInitialPrompt ();
         });
     }
+
+function addDepartment () {  
+    let dept = process.argv[0];
+    db.query('INSERT INTO department (name) VALUES (`${dept}`)', function (err, results) {
+        console.table(results);
+        emsInitialPrompt ();
+        });
+}
+
+
+
+
+
+
+
+
             
 
 // db.promise().query("SELECT 1")
