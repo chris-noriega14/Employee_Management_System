@@ -74,7 +74,7 @@ function employeeTable () {
     }
 
 function addEmployee () {  
-    db.query('SELECT * FROM department', function (err,result) {
+    db.query('SELECT * FROM role', function (err,result) {
         if (err) throw err;
     
     inquirer
@@ -93,29 +93,45 @@ function addEmployee () {
         {
         type: 'list',
         message: "What is the employee's role?",
-        name: "new_role",
-        choices: result.map(department => department.name)
-        },
-        {
-        type: 'list',
-        message: "Who is the employee's manager?",
-        name: "new_mgr",
-        choices: result.map(department => department.name)
+        name: "new_role_id",
+        choices: result.map(role => role.title)
         }
+        // {
+        // type: 'list',
+        // message: "Who is the employee's manager?",
+        // name: "new_mgr",
+        // choices: result.map(department => department.name)
+        // }
     ])  
     .then(answers => {
-        const departmentResult = result.find(department => department.name === answers.new_role_dept)
-        db.query('INSERT INTO role SET ?',
-        {
-            first_name: answers.new_role_fname,
-            last_name: answers.new_role_lname,
-            role_id: answers.new_role,
-            manager_id:answers.new_mgr,
-            department_id: departmentResult.id //Equivalent to department.name's id
-        }, 
-        function (err, results) 
-        {
-            emsInitialPrompt ();
+        const addedRole = result.find(role => role.title === answers.new_role_id)
+        const employeeFName = answers.new_role_fname
+        const employeeLName = answers.new_role_lname
+        db.query('SELECT * FROM employee', function (err,result) {
+            inquirer.prompt ([
+            {
+                type: 'list',
+                message: "Who is the employee's manager?",
+                name: "new_mgr",
+                choices: result.map(employee => employee.first_name)
+            }
+            ])
+            .then(answers => {
+                const newManager = result.find(employee => employee.first_name === answers.new_mgr)
+                db.query('INSERT INTO employee SET ?',
+                {
+                    first_name: employeeFName,
+                    last_name: employeeLName,
+                    role_id: addedRole.id,
+                    manager_id:newManager.id
+                },
+                  function (err) {
+                      if (err) throw err;
+                      console.log("Successfully added " + employeeFName + " " + employeeLName + " to the database!");
+                    emsInitialPrompt ();
+                  }
+                )
+            }) 
         })
     })
 })
@@ -146,7 +162,7 @@ function updateRole () {
             choices: result.map(role => role.title)
             }
         ]) .then(answers => {
-            const newRole = result.find(role => role.title = answers.role_id)
+            const newRole = result.find(role => role.title === answers.role_id)
             db.query("UPDATE employee SET ? WHERE id = " + "'" + employeeResult + "'", {
                 role_id: "" + newRole.id + "",
               },
